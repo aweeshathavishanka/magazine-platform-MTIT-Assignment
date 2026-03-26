@@ -5,25 +5,17 @@ const uuidLikeRegex =
 
 const uuidLike = z.string().regex(uuidLikeRegex, "Must be a valid UUID");
 
-const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
 export const createCategorySchema = z.object({
   body: z.object({
     name: z
       .string({ required_error: "name is required" })
       .min(2, "name must be at least 2 characters")
-      .max(100, "name must be at most 100 characters"),
-    slug: z
-      .string({ required_error: "slug is required" })
-      .min(2, "slug must be at least 2 characters")
-      .max(100, "slug must be at most 100 characters")
-      .regex(slugRegex, "slug must be lowercase letters, numbers and hyphens only"),
+      .max(100, "name must be at most 100 characters")
+      .trim(),
     description: z
       .string()
       .max(500, "description must be at most 500 characters")
       .optional(),
-    parent_id: uuidLike.optional(),
-    is_active: z.boolean().default(true),
   }),
 });
 
@@ -43,19 +35,12 @@ export const updateCategorySchema = z.object({
         .string()
         .min(2, "name must be at least 2 characters")
         .max(100, "name must be at most 100 characters")
-        .optional(),
-      slug: z
-        .string()
-        .min(2, "slug must be at least 2 characters")
-        .max(100, "slug must be at most 100 characters")
-        .regex(slugRegex, "slug must be lowercase letters, numbers and hyphens only")
+        .trim()
         .optional(),
       description: z
         .string()
         .max(500, "description must be at most 500 characters")
         .optional(),
-      parent_id: uuidLike.optional(),
-      is_active: z.boolean().optional(),
     })
     .refine((payload) => Object.keys(payload).length > 0, {
       message: "At least one field must be provided for update",
@@ -66,14 +51,5 @@ export const listCategoriesQuerySchema = z.object({
   query: z.object({
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(100).optional(),
-    is_active: z
-      .string()
-      .optional()
-      .transform((val) => {
-        if (val === "true") return true;
-        if (val === "false") return false;
-        return undefined;
-      }),
-    parent_id: uuidLike.optional(),
   }),
 });

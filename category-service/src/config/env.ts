@@ -26,4 +26,5 @@ export const env = {
   serviceName: "category-service",
   swaggerDevUrl: process.env.SWAGGER_DEV_URL ?? "http://localhost:3002",
   swaggerProdUrl: process.env.SWAGGER_PROD_URL ?? "https://api.example.com",
+  articleServiceUrl: process.env.ARTICLE_SERVICE_URL ?? "http://localhost:3000",
 };
