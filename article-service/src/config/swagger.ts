@@ -6,17 +6,18 @@ const options = {
     info: {
       title: "Article Service API",
       version: "1.0.0",
-      description: "RESTful API for managing magazine articles in MTIT Assignment 2 platform"
+      description:
+        "RESTful API for managing magazine articles in MTIT Assignment 2 platform",
     },
     servers: [
       {
         url: "http://localhost:3000",
-        description: "Development server"
+        description: "Development server",
       },
       {
         url: "https://api.example.com",
-        description: "Production server"
-      }
+        description: "Production server",
+      },
     ],
     components: {
       schemas: {
@@ -26,56 +27,67 @@ const options = {
             article_id: {
               type: "string",
               format: "uuid",
-              description: "Unique article identifier"
+              description: "Unique article identifier",
+              example: "550e8400-e29b-41d4-a716-446655440000",
             },
             title: {
               type: "string",
               minLength: 5,
               maxLength: 200,
-              description: "Article title"
+              description: "Article title",
+              example: "Introduction to Artificial Intelligence",
             },
             content: {
               type: "string",
               minLength: 20,
-              description: "Article content"
+              description: "Article content",
+              example:
+                "This article explains the fundamentals of artificial intelligence, machine learning, and deep learning concepts for beginners.",
             },
             author_id: {
               type: "string",
               format: "uuid",
-              description: "Author ID"
+              description: "Author ID",
+              example: "550e8400-e29b-41d4-a716-446655440010",
             },
             category_id: {
               type: "string",
               format: "uuid",
-              description: "Category ID"
+              description: "Category ID",
+              example: "550e8400-e29b-41d4-a716-446655440001",
             },
             tags: {
               type: "array",
               items: {
-                type: "string"
+                type: "string",
               },
-              description: "Article tags"
+              description: "Article tags",
+              example: ["AI", "Technology", "Machine Learning"],
             },
             status: {
               type: "string",
               enum: ["draft", "published"],
-              description: "Article status"
+              description: "Article status",
+              example: "published",
             },
             thumbnail_url: {
               type: "string",
               format: "uri",
-              description: "Article thumbnail URL"
+              description: "Article thumbnail URL",
+              example: "https://example.com/images/ai-article.jpg",
             },
             createdAt: {
               type: "string",
               format: "date-time",
-              description: "Article creation timestamp"
+              description: "Article creation timestamp",
+              example: "2026-03-26T14:13:01.149Z",
             },
             updatedAt: {
               type: "string",
               format: "date-time",
-              description: "Article last update timestamp"
-            }
+              description: "Article last update timestamp",
+              example: "2026-03-26T14:13:01.149Z",
+            },
           },
           required: [
             "article_id",
@@ -85,8 +97,8 @@ const options = {
             "category_id",
             "status",
             "createdAt",
-            "updatedAt"
-          ]
+            "updatedAt",
+          ],
         },
         CreateArticleRequest: {
           type: "object",
@@ -94,37 +106,45 @@ const options = {
             title: {
               type: "string",
               minLength: 5,
-              maxLength: 200
+              maxLength: 200,
+              example: "Introduction to Artificial Intelligence",
             },
             content: {
               type: "string",
-              minLength: 20
+              minLength: 20,
+              example:
+                "This article explains the fundamentals of artificial intelligence, machine learning, and deep learning concepts for beginners.",
             },
             author_id: {
               type: "string",
-              format: "uuid"
+              format: "uuid",
+              example: "550e8400-e29b-41d4-a716-446655440000",
             },
             category_id: {
               type: "string",
-              format: "uuid"
+              format: "uuid",
+              example: "550e8400-e29b-41d4-a716-446655440001",
             },
             tags: {
               type: "array",
               items: {
-                type: "string"
-              }
+                type: "string",
+              },
+              example: ["AI", "Technology", "Machine Learning"],
             },
             status: {
               type: "string",
               enum: ["draft", "published"],
-              default: "draft"
+              default: "draft",
+              example: "draft",
             },
             thumbnail_url: {
               type: "string",
-              format: "uri"
-            }
+              format: "uri",
+              example: "https://example.com/images/ai-article.jpg",
+            },
           },
-          required: ["title", "content", "author_id", "category_id"]
+          required: ["title", "content", "author_id", "category_id"],
         },
         UpdateArticleRequest: {
           type: "object",
@@ -132,72 +152,79 @@ const options = {
             title: {
               type: "string",
               minLength: 5,
-              maxLength: 200
+              maxLength: 200,
+              example: "Introduction to Artificial Intelligence",
             },
             content: {
               type: "string",
-              minLength: 20
+              minLength: 20,
+              example:
+                "This article explains the fundamentals of artificial intelligence, machine learning, and deep learning concepts for beginners.",
             },
             category_id: {
               type: "string",
-              format: "uuid"
+              format: "uuid",
+              example: "550e8400-e29b-41d4-a716-446655440001",
             },
             tags: {
               type: "array",
               items: {
-                type: "string"
-              }
+                type: "string",
+              },
+              example: ["AI", "Technology", "Machine Learning"],
             },
             status: {
               type: "string",
-              enum: ["draft", "published"]
+              enum: ["draft", "published"],
+              example: "published",
             },
             thumbnail_url: {
               type: "string",
-              format: "uri"
-            }
-          }
+              format: "uri",
+              example: "https://example.com/images/ai-article.jpg",
+            },
+          },
         },
         SuccessResponse: {
           type: "object",
           properties: {
             success: {
-              type: "boolean"
+              type: "boolean",
             },
             message: {
-              type: "string"
+              type: "string",
             },
             statusCode: {
-              type: "integer"
+              type: "integer",
             },
             data: {
-              type: "object"
-            }
-          }
+              type: "object",
+            },
+          },
         },
         ErrorResponse: {
           type: "object",
           properties: {
             status: {
               type: "string",
-              enum: ["error"]
+              enum: ["error"],
             },
             code: {
-              type: "integer"
+              type: "integer",
             },
             message: {
-              type: "string"
+              type: "string",
             },
             service: {
-              type: "string"
+              type: "string",
             },
             timestamp: {
               type: "string",
-              format: "date-time"
-            }
-          }
-        }
-      }
+              format: "date-time",
+            },
+          },
+        },
+      },
     },
     paths: {
       "/api/v1/health": {
@@ -210,13 +237,13 @@ const options = {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/SuccessResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
+                    $ref: "#/components/schemas/SuccessResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       "/api/v1/articles": {
         post: {
@@ -227,10 +254,10 @@ const options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/CreateArticleRequest"
-                }
-              }
-            }
+                  $ref: "#/components/schemas/CreateArticleRequest",
+                },
+              },
+            },
           },
           responses: {
             "201": {
@@ -238,32 +265,32 @@ const options = {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/SuccessResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/SuccessResponse",
+                  },
+                },
+              },
             },
             "400": {
               description: "Invalid request data",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
             },
             "500": {
               description: "Internal server error",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            }
-          }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
+            },
+          },
         },
         get: {
           summary: "Get all articles",
@@ -274,9 +301,9 @@ const options = {
               in: "query",
               schema: {
                 type: "integer",
-                default: 1
+                default: 1,
               },
-              description: "Page number for pagination"
+              description: "Page number for pagination",
             },
             {
               name: "limit",
@@ -284,37 +311,37 @@ const options = {
               schema: {
                 type: "integer",
                 default: 10,
-                maximum: 100
+                maximum: 100,
               },
-              description: "Number of articles per page"
+              description: "Number of articles per page",
             },
             {
               name: "category_id",
               in: "query",
               schema: {
                 type: "string",
-                format: "uuid"
+                format: "uuid",
               },
-              description: "Filter by category ID"
+              description: "Filter by category ID",
             },
             {
               name: "author_id",
               in: "query",
               schema: {
                 type: "string",
-                format: "uuid"
+                format: "uuid",
               },
-              description: "Filter by author ID"
+              description: "Filter by author ID",
             },
             {
               name: "status",
               in: "query",
               schema: {
                 type: "string",
-                enum: ["draft", "published"]
+                enum: ["draft", "published"],
               },
-              description: "Filter by status"
-            }
+              description: "Filter by status",
+            },
           ],
           responses: {
             "200": {
@@ -322,23 +349,23 @@ const options = {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/SuccessResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/SuccessResponse",
+                  },
+                },
+              },
             },
             "500": {
               description: "Internal server error",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       "/api/v1/articles/{id}": {
         get: {
@@ -351,10 +378,10 @@ const options = {
               required: true,
               schema: {
                 type: "string",
-                format: "uuid"
+                format: "uuid",
               },
-              description: "Article ID"
-            }
+              description: "Article ID",
+            },
           ],
           responses: {
             "200": {
@@ -362,32 +389,32 @@ const options = {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/SuccessResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/SuccessResponse",
+                  },
+                },
+              },
             },
             "404": {
               description: "Article not found",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
             },
             "500": {
               description: "Internal server error",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            }
-          }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
+            },
+          },
         },
         put: {
           summary: "Update article",
@@ -399,20 +426,20 @@ const options = {
               required: true,
               schema: {
                 type: "string",
-                format: "uuid"
+                format: "uuid",
               },
-              description: "Article ID"
-            }
+              description: "Article ID",
+            },
           ],
           requestBody: {
             required: true,
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/UpdateArticleRequest"
-                }
-              }
-            }
+                  $ref: "#/components/schemas/UpdateArticleRequest",
+                },
+              },
+            },
           },
           responses: {
             "200": {
@@ -420,42 +447,42 @@ const options = {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/SuccessResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/SuccessResponse",
+                  },
+                },
+              },
             },
             "404": {
               description: "Article not found",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
             },
             "400": {
               description: "Invalid request data",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
             },
             "500": {
               description: "Internal server error",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            }
-          }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
+            },
+          },
         },
         delete: {
           summary: "Delete article",
@@ -467,10 +494,10 @@ const options = {
               required: true,
               schema: {
                 type: "string",
-                format: "uuid"
+                format: "uuid",
               },
-              description: "Article ID"
-            }
+              description: "Article ID",
+            },
           ],
           responses: {
             "200": {
@@ -478,33 +505,33 @@ const options = {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/SuccessResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/SuccessResponse",
+                  },
+                },
+              },
             },
             "404": {
               description: "Article not found",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
             },
             "500": {
               description: "Internal server error",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       "/api/v1/articles/{id}/publish": {
         patch: {
@@ -517,10 +544,10 @@ const options = {
               required: true,
               schema: {
                 type: "string",
-                format: "uuid"
+                format: "uuid",
               },
-              description: "Article ID"
-            }
+              description: "Article ID",
+            },
           ],
           responses: {
             "200": {
@@ -528,43 +555,43 @@ const options = {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/SuccessResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/SuccessResponse",
+                  },
+                },
+              },
             },
             "404": {
               description: "Article not found",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
             },
             "400": {
               description: "Article already published or invalid state",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
             },
             "500": {
               description: "Internal server error",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       "/api/v1/articles/{id}/unpublish": {
         patch: {
@@ -577,10 +604,10 @@ const options = {
               required: true,
               schema: {
                 type: "string",
-                format: "uuid"
+                format: "uuid",
               },
-              description: "Article ID"
-            }
+              description: "Article ID",
+            },
           ],
           responses: {
             "200": {
@@ -588,47 +615,47 @@ const options = {
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/SuccessResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/SuccessResponse",
+                  },
+                },
+              },
             },
             "404": {
               description: "Article not found",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
             },
             "400": {
               description: "Article already in draft or invalid state",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
             },
             "500": {
               description: "Internal server error",
               content: {
                 "application/json": {
                   schema: {
-                    $ref: "#/components/schemas/ErrorResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                    $ref: "#/components/schemas/ErrorResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
-  apis: []
+  apis: [],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
