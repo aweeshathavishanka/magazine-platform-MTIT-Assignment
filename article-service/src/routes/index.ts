@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { articleRouter } from "../modules/article/article.routes";
 
 export const router = Router();
 
@@ -10,3 +11,5 @@ router.get("/health", (_req, res) => {
     data: { uptime: process.uptime() },
   });
 });
+
+router.use(articleRouter);
