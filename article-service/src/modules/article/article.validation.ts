@@ -19,19 +19,22 @@ export const createArticleSchema = z.object({
     category_id: uuidLike,
     tags: z.array(z.string().min(1, "tag cannot be empty")).default([]),
     status: z.enum(ARTICLE_STATUSES).default("draft"),
-    thumbnail_url: z.string().url("thumbnail_url must be a valid URL").optional()
-  })
+    thumbnail_url: z
+      .string()
+      .url("thumbnail_url must be a valid URL")
+      .optional(),
+  }),
 });
 
 export const articleIdParamSchema = z.object({
   params: z.object({
-    id: uuidLike
-  })
+    id: uuidLike,
+  }),
 });
 
 export const updateArticleSchema = z.object({
   params: z.object({
-    id: uuidLike
+    id: uuidLike,
   }),
   body: z
     .object({
@@ -47,11 +50,14 @@ export const updateArticleSchema = z.object({
       category_id: uuidLike.optional(),
       tags: z.array(z.string().min(1, "tag cannot be empty")).optional(),
       status: z.enum(ARTICLE_STATUSES).optional(),
-      thumbnail_url: z.string().url("thumbnail_url must be a valid URL").optional()
+      thumbnail_url: z
+        .string()
+        .url("thumbnail_url must be a valid URL")
+        .optional(),
     })
     .refine((payload) => Object.keys(payload).length > 0, {
-      message: "At least one field must be provided for update"
-    })
+      message: "At least one field must be provided for update",
+    }),
 });
 
 export const listArticlesQuerySchema = z.object({
@@ -60,6 +66,6 @@ export const listArticlesQuerySchema = z.object({
     limit: z.coerce.number().int().positive().max(100).optional(),
     category_id: uuidLike.optional(),
     author_id: uuidLike.optional(),
-    status: z.enum(ARTICLE_STATUSES).optional()
-  })
+    status: z.enum(ARTICLE_STATUSES).optional(),
+  }),
 });

@@ -37,7 +37,7 @@ export class ArticleService {
       status: payload.status ?? "draft",
       thumbnail_url: payload.thumbnail_url,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     return this.articleRepository.create(entity);
@@ -57,8 +57,14 @@ export class ArticleService {
     return article;
   }
 
-  async updateArticle(articleId: string, payload: UpdateArticleInput): Promise<Article> {
-    const updated = await this.articleRepository.updateByArticleId(articleId, payload);
+  async updateArticle(
+    articleId: string,
+    payload: UpdateArticleInput,
+  ): Promise<Article> {
+    const updated = await this.articleRepository.updateByArticleId(
+      articleId,
+      payload,
+    );
 
     if (!updated) {
       throw new AppError("Article not found", HTTP_STATUS.NOT_FOUND);
@@ -89,7 +95,10 @@ export class ArticleService {
     const article = await this.getArticleById(articleId);
 
     if (article.status === "draft") {
-      throw new AppError("Article already in draft state", HTTP_STATUS.BAD_REQUEST);
+      throw new AppError(
+        "Article already in draft state",
+        HTTP_STATUS.BAD_REQUEST,
+      );
     }
 
     return this.updateArticle(articleId, { status: "draft" });

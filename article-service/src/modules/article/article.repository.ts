@@ -16,7 +16,9 @@ export class ArticleRepository {
   }
 
   async findByArticleId(articleId: string): Promise<Article | null> {
-    return ArticleModel.findOne({ article_id: articleId }).lean<Article>().exec();
+    return ArticleModel.findOne({ article_id: articleId })
+      .lean<Article>()
+      .exec();
   }
 
   async findAll(query: ArticleListQuery): Promise<ArticleListResult> {
@@ -46,28 +48,33 @@ export class ArticleRepository {
         .limit(limit)
         .lean()
         .exec() as Promise<Article[]>,
-      ArticleModel.countDocuments(filter)
+      ArticleModel.countDocuments(filter),
     ]);
 
     return {
       articles,
       total,
       page,
-      limit
+      limit,
     };
   }
 
-  async updateByArticleId(articleId: string, update: Partial<Article>): Promise<Article | null> {
+  async updateByArticleId(
+    articleId: string,
+    update: Partial<Article>,
+  ): Promise<Article | null> {
     return ArticleModel.findOneAndUpdate({ article_id: articleId }, update, {
       new: true,
-      runValidators: true
+      runValidators: true,
     })
       .lean<Article>()
       .exec();
   }
 
   async deleteByArticleId(articleId: string): Promise<boolean> {
-    const result = await ArticleModel.deleteOne({ article_id: articleId }).exec();
+    const result = await ArticleModel.deleteOne({
+      article_id: articleId,
+    }).exec();
     return result.deletedCount > 0;
   }
 }

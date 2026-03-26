@@ -3,6 +3,7 @@
 Backend microservice for managing magazine articles in the MTIT Assignment 2 platform.
 
 ## Tech Stack
+
 - Node.js
 - Express.js
 - TypeScript
@@ -10,6 +11,7 @@ Backend microservice for managing magazine articles in the MTIT Assignment 2 pla
 - Zod (request validation)
 
 ## Features
+
 - Create article
 - Get all articles (with pagination and filters)
 - Get article by ID
@@ -50,11 +52,13 @@ article-service/
 ```
 
 ## Prerequisites
+
 - Node.js 18+ recommended
 - npm 9+ recommended
 - MongoDB instance (local or cloud)
 
 ## Environment Variables
+
 Create a .env file in article-service root:
 
 ```env
@@ -64,6 +68,7 @@ MONGODB_URL=mongodb://localhost:27017/article_service
 ```
 
 Notes:
+
 - PORT defaults to 3000 if missing.
 - MONGODB_URL is required.
 - No hardcoded localhost/port is used in source code.
@@ -95,6 +100,7 @@ npm run start
 ```
 
 ## Available Scripts
+
 - npm run dev: Run with hot reload using ts-node-dev
 - npm run build: Compile TypeScript to dist/
 - npm run start: Start compiled app from dist/
@@ -102,10 +108,12 @@ npm run start
 - npm run format: Format files with Prettier
 
 ## Base URL
+
 - Local: http://localhost:3000
 - API prefix: /api/v1
 
 ## Health Check
+
 - GET /api/v1/health
 
 Success response:
@@ -124,6 +132,7 @@ Success response:
 ## API Endpoints
 
 ### 1) Create Article
+
 - Method: POST
 - Path: /api/v1/articles
 
@@ -142,6 +151,7 @@ Request body:
 ```
 
 ### 2) Get All Articles
+
 - Method: GET
 - Path: /api/v1/articles
 - Query params (optional):
@@ -158,26 +168,32 @@ Example:
 ```
 
 ### 3) Get Article By ID
+
 - Method: GET
 - Path: /api/v1/articles/:id
 
 ### 4) Update Article
+
 - Method: PUT
 - Path: /api/v1/articles/:id
 
 ### 5) Delete Article
+
 - Method: DELETE
 - Path: /api/v1/articles/:id
 
 ### 6) Publish Article
+
 - Method: PATCH
 - Path: /api/v1/articles/:id/publish
 
 ### 7) Unpublish Article
+
 - Method: PATCH
 - Path: /api/v1/articles/:id/unpublish
 
 ## Validation Rules (Implemented)
+
 - article id, author_id, category_id must be valid UUID format
 - title: min 5, max 200 chars
 - content: min 20 chars
@@ -223,6 +239,7 @@ Example:
 ```
 
 ## Production Readiness Notes
+
 - Security middleware: helmet, cors
 - Input validation on all REST endpoints
 - Centralized error handling
@@ -231,6 +248,7 @@ Example:
 - Layered architecture (controller/service/repository/model)
 
 ## Integration Notes
+
 - Service is designed to run behind API Gateway.
 - Authentication and role checks can be added at gateway or middleware level.
 - Swagger can be introduced later after all services are merged.

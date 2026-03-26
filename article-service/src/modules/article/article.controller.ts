@@ -14,8 +14,8 @@ export class ArticleController {
       data: {
         article_id: created.article_id,
         title: created.title,
-        status: created.status
-      }
+        status: created.status,
+      },
     });
   }
 
@@ -25,7 +25,7 @@ export class ArticleController {
       limit: req.query.limit ? Number(req.query.limit) : undefined,
       category_id: req.query.category_id as string | undefined,
       author_id: req.query.author_id as string | undefined,
-      status: req.query.status as "draft" | "published" | undefined
+      status: req.query.status as "draft" | "published" | undefined,
     });
 
     sendResponse(res, {
@@ -36,8 +36,8 @@ export class ArticleController {
         article_id: article.article_id,
         title: article.title,
         author_id: article.author_id,
-        status: article.status
-      }))
+        status: article.status,
+      })),
     });
   }
 
@@ -48,7 +48,7 @@ export class ArticleController {
       success: true,
       message: "Article fetched successfully",
       statusCode: HTTP_STATUS.OK,
-      data: article
+      data: article,
     });
   }
 
@@ -62,8 +62,8 @@ export class ArticleController {
       data: {
         article_id: article.article_id,
         title: article.title,
-        status: article.status
-      }
+        status: article.status,
+      },
     });
   }
 
@@ -75,8 +75,8 @@ export class ArticleController {
       message: "Article deleted successfully",
       statusCode: HTTP_STATUS.OK,
       data: {
-        article_id: req.params.id
-      }
+        article_id: req.params.id,
+      },
     });
   }
 
@@ -89,8 +89,8 @@ export class ArticleController {
       statusCode: HTTP_STATUS.OK,
       data: {
         article_id: article.article_id,
-        status: article.status
-      }
+        status: article.status,
+      },
     });
   }
 
@@ -103,8 +103,8 @@ export class ArticleController {
       statusCode: HTTP_STATUS.OK,
       data: {
         article_id: article.article_id,
-        status: article.status
-      }
+        status: article.status,
+      },
     });
   }
 }
