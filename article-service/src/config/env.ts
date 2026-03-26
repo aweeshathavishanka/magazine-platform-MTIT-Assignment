@@ -24,4 +24,6 @@ export const env = {
   port: Number(process.env.PORT ?? 3000),
   mongodbUrl: process.env.MONGODB_URL as string,
   serviceName: "article-service",
+  swaggerDevUrl: process.env.SWAGGER_DEV_URL ?? "http://localhost:3000",
+  swaggerProdUrl: process.env.SWAGGER_PROD_URL ?? "https://api.example.com",
 };
