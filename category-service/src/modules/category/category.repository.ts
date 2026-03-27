@@ -1,4 +1,3 @@
-import { FilterQuery } from "mongoose";
 import { CategoryModel } from "./category.model";
 import { Category, CategoryListQuery } from "./category.types";
 
@@ -21,42 +20,28 @@ export class CategoryRepository {
       .exec();
   }
 
-  async findBySlug(slug: string): Promise<Category | null> {
-    return CategoryModel.findOne({ slug }).lean<Category>().exec();
+  async findByName(name: string): Promise<Category | null> {
+    return CategoryModel.findOne({ name: { $regex: new RegExp(`^${name}$`, "i") } })
+      .lean<Category>()
+      .exec();
   }
 
   async findAll(query: CategoryListQuery): Promise<CategoryListResult> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 10;
-
-    const filter: FilterQuery<Category> = {};
-
-    if (query.is_active !== undefined) {
-      filter.is_active = query.is_active;
-    }
-
-    if (query.parent_id) {
-      filter.parent_id = query.parent_id;
-    }
-
     const skip = (page - 1) * limit;
 
     const [categories, total] = await Promise.all([
-      CategoryModel.find(filter)
+      CategoryModel.find()
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean()
         .exec() as Promise<Category[]>,
-      CategoryModel.countDocuments(filter),
+      CategoryModel.countDocuments(),
     ]);
 
-    return {
-      categories,
-      total,
-      page,
-      limit,
-    };
+    return { categories, total, page, limit };
   }
 
   async updateByCategoryId(

@@ -40,3 +40,9 @@ categoryRouter.delete(
   validateRequest(categoryIdParamSchema),
   asyncHandler(categoryController.deleteCategory.bind(categoryController)),
 );
+
+categoryRouter.get(
+  "/categories/:id/articles",
+  validateRequest(categoryIdParamSchema),
+  asyncHandler(categoryController.getArticlesByCategory.bind(categoryController)),
+);

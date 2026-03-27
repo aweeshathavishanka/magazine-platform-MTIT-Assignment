@@ -14,8 +14,6 @@ export class CategoryController {
       data: {
         category_id: created.category_id,
         name: created.name,
-        slug: created.slug,
-        is_active: created.is_active,
       },
     });
   }
@@ -24,11 +22,6 @@ export class CategoryController {
     const result = await categoryService.getAllCategories({
       page: req.query.page ? Number(req.query.page) : undefined,
       limit: req.query.limit ? Number(req.query.limit) : undefined,
-      is_active:
-        req.query.is_active !== undefined
-          ? req.query.is_active === "true"
-          : undefined,
-      parent_id: req.query.parent_id as string | undefined,
     });
 
     sendResponse(res, {
@@ -38,10 +31,7 @@ export class CategoryController {
       data: result.categories.map((category) => ({
         category_id: category.category_id,
         name: category.name,
-        slug: category.slug,
         description: category.description,
-        parent_id: category.parent_id,
-        is_active: category.is_active,
       })),
     });
   }
@@ -53,7 +43,11 @@ export class CategoryController {
       success: true,
       message: "Category fetched successfully",
       statusCode: HTTP_STATUS.OK,
-      data: category,
+      data: {
+        category_id: category.category_id,
+        name: category.name,
+        description: category.description,
+      },
     });
   }
 
@@ -70,8 +64,6 @@ export class CategoryController {
       data: {
         category_id: category.category_id,
         name: category.name,
-        slug: category.slug,
-        is_active: category.is_active,
       },
     });
   }
@@ -86,6 +78,17 @@ export class CategoryController {
       data: {
         category_id: req.params.id,
       },
+    });
+  }
+
+  async getArticlesByCategory(req: Request, res: Response): Promise<void> {
+    const articles = await categoryService.getArticlesByCategory(req.params.id);
+
+    sendResponse(res, {
+      success: true,
+      message: "Articles fetched successfully for category",
+      statusCode: HTTP_STATUS.OK,
+      data: articles,
     });
   }
 }

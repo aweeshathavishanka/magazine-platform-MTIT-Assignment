@@ -16,7 +16,9 @@ const options: swaggerJsdoc.Options = {
             ? env.swaggerProdUrl
             : env.swaggerDevUrl,
         description:
-          env.nodeEnv === "production" ? "Production server" : "Development server",
+          env.nodeEnv === "production"
+            ? "Production server"
+            : "Development server",
       },
     ],
     components: {
@@ -26,33 +28,24 @@ const options: swaggerJsdoc.Options = {
           properties: {
             category_id: { type: "string", format: "uuid" },
             name: { type: "string" },
-            slug: { type: "string" },
             description: { type: "string" },
-            parent_id: { type: "string", format: "uuid", nullable: true },
-            is_active: { type: "boolean" },
             createdAt: { type: "string", format: "date-time" },
             updatedAt: { type: "string", format: "date-time" },
           },
         },
         CreateCategoryBody: {
           type: "object",
-          required: ["name", "slug"],
+          required: ["name"],
           properties: {
             name: { type: "string", minLength: 2, maxLength: 100 },
-            slug: { type: "string", minLength: 2, maxLength: 100 },
             description: { type: "string", maxLength: 500 },
-            parent_id: { type: "string", format: "uuid" },
-            is_active: { type: "boolean", default: true },
           },
         },
         UpdateCategoryBody: {
           type: "object",
           properties: {
             name: { type: "string", minLength: 2, maxLength: 100 },
-            slug: { type: "string", minLength: 2, maxLength: 100 },
             description: { type: "string", maxLength: 500 },
-            parent_id: { type: "string", format: "uuid" },
-            is_active: { type: "boolean" },
           },
         },
         ApiResponse: {
@@ -77,7 +70,7 @@ const options: swaggerJsdoc.Options = {
       },
     },
     tags: [
-      { name: "Health", description: "Health check endpoints" },
+      { name: "Health", description: "Health check" },
       { name: "Categories", description: "Category CRUD operations" },
     ],
     paths: {
@@ -106,37 +99,81 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: { $ref: "#/components/schemas/CreateCategoryBody" },
+                example: {
+                  name: "Technology",
+                  description: "Articles related to technology and innovations",
+                },
               },
             },
           },
           responses: {
             "201": {
-              description: "Category created",
+              description: "Category created successfully",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/ApiResponse" },
+                  example: {
+                    success: true,
+                    message: "Category created successfully",
+                    statusCode: 201,
+                    data: { category_id: "uuid", name: "Technology" },
+                  },
                 },
               },
             },
-            "400": { description: "Validation error" },
-            "409": { description: "Slug already exists" },
+            "400": {
+              description: "Validation error",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/ErrorResponse" },
+                  example: {
+                    status: "error",
+                    code: 400,
+                    message: "Category already exists",
+                    service: "category-service",
+                    timestamp: "2026-03-24T10:00:00Z",
+                  },
+                },
+              },
+            },
+            "409": { description: "Category name already exists" },
           },
         },
         get: {
           tags: ["Categories"],
-          summary: "List all categories",
+          summary: "Get all categories",
           parameters: [
-            { name: "page", in: "query", schema: { type: "integer" } },
-            { name: "limit", in: "query", schema: { type: "integer" } },
-            { name: "is_active", in: "query", schema: { type: "boolean" } },
-            { name: "parent_id", in: "query", schema: { type: "string" } },
+            {
+              name: "page",
+              in: "query",
+              schema: { type: "integer", minimum: 1 },
+              description: "Page number",
+            },
+            {
+              name: "limit",
+              in: "query",
+              schema: { type: "integer", minimum: 1, maximum: 100 },
+              description: "Items per page",
+            },
           ],
           responses: {
             "200": {
-              description: "Categories fetched",
+              description: "Categories fetched successfully",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/ApiResponse" },
+                  example: {
+                    success: true,
+                    message: "Categories fetched successfully",
+                    statusCode: 200,
+                    data: [
+                      {
+                        category_id: "uuid",
+                        name: "Technology",
+                        description: "Articles related to technology",
+                      },
+                    ],
+                  },
                 },
               },
             },
@@ -146,18 +183,43 @@ const options: swaggerJsdoc.Options = {
       "/api/v1/categories/{id}": {
         get: {
           tags: ["Categories"],
-          summary: "Get a category by ID",
+          summary: "Get category by ID",
           parameters: [
             {
               name: "id",
               in: "path",
               required: true,
               schema: { type: "string", format: "uuid" },
+              description: "Category UUID",
             },
           ],
           responses: {
-            "200": { description: "Category found" },
-            "404": { description: "Category not found" },
+            "200": {
+              description: "Category fetched successfully",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/ApiResponse" },
+                  example: {
+                    success: true,
+                    message: "Category fetched successfully",
+                    statusCode: 200,
+                    data: {
+                      category_id: "uuid",
+                      name: "Technology",
+                      description: "Articles related to technology",
+                    },
+                  },
+                },
+              },
+            },
+            "404": {
+              description: "Category not found",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/ErrorResponse" },
+                },
+              },
+            },
           },
         },
         put: {
@@ -176,11 +238,29 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: { $ref: "#/components/schemas/UpdateCategoryBody" },
+                example: {
+                  name: "Business",
+                  description: "Articles related to business and finance",
+                },
               },
             },
           },
           responses: {
-            "200": { description: "Category updated" },
+            "200": {
+              description: "Category updated successfully",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/ApiResponse" },
+                  example: {
+                    success: true,
+                    message: "Category updated successfully",
+                    statusCode: 200,
+                    data: { category_id: "uuid", name: "Business" },
+                  },
+                },
+              },
+            },
+            "400": { description: "Invalid update data or category name already exists" },
             "404": { description: "Category not found" },
           },
         },
@@ -196,8 +276,66 @@ const options: swaggerJsdoc.Options = {
             },
           ],
           responses: {
-            "200": { description: "Category deleted" },
+            "200": {
+              description: "Category deleted successfully",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/ApiResponse" },
+                  example: {
+                    success: true,
+                    message: "Category deleted successfully",
+                    statusCode: 200,
+                    data: { category_id: "uuid" },
+                  },
+                },
+              },
+            },
             "404": { description: "Category not found" },
+          },
+        },
+      },
+      "/api/v1/categories/{id}/articles": {
+        get: {
+          tags: ["Categories"],
+          summary: "Get all articles under a category",
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string", format: "uuid" },
+              description: "Category UUID",
+            },
+          ],
+          responses: {
+            "200": {
+              description: "Articles fetched successfully for category",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/ApiResponse" },
+                  example: {
+                    success: true,
+                    message: "Articles fetched successfully for category",
+                    statusCode: 200,
+                    data: [
+                      {
+                        article_id: "uuid",
+                        title: "AI in 2026",
+                        author_id: "uuid",
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+            "404": {
+              description: "Category not found",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/ErrorResponse" },
+                },
+              },
+            },
           },
         },
       },

@@ -1,34 +1,30 @@
+import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { AppError } from "../../common/errors/AppError";
 import { HTTP_STATUS } from "../../common/utils/httpStatus";
+import { env } from "../../config/env";
 import { Category, CategoryListQuery } from "./category.types";
 import { CategoryRepository } from "./category.repository";
 
 interface CreateCategoryInput {
   name: string;
-  slug: string;
   description?: string;
-  parent_id?: string;
-  is_active?: boolean;
 }
 
 interface UpdateCategoryInput {
   name?: string;
-  slug?: string;
   description?: string;
-  parent_id?: string;
-  is_active?: boolean;
 }
 
 export class CategoryService {
   constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async createCategory(payload: CreateCategoryInput): Promise<Category> {
-    const existingSlug = await this.categoryRepository.findBySlug(payload.slug);
+    const existing = await this.categoryRepository.findByName(payload.name);
 
-    if (existingSlug) {
+    if (existing) {
       throw new AppError(
-        `Slug "${payload.slug}" is already taken`,
+        "Category already exists",
         HTTP_STATUS.CONFLICT,
       );
     }
@@ -36,10 +32,7 @@ export class CategoryService {
     const entity: Category = {
       category_id: uuidv4(),
       name: payload.name,
-      slug: payload.slug,
       description: payload.description,
-      parent_id: payload.parent_id,
-      is_active: payload.is_active ?? true,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -52,8 +45,7 @@ export class CategoryService {
   }
 
   async getCategoryById(categoryId: string): Promise<Category> {
-    const category =
-      await this.categoryRepository.findByCategoryId(categoryId);
+    const category = await this.categoryRepository.findByCategoryId(categoryId);
 
     if (!category) {
       throw new AppError("Category not found", HTTP_STATUS.NOT_FOUND);
@@ -66,12 +58,12 @@ export class CategoryService {
     categoryId: string,
     payload: UpdateCategoryInput,
   ): Promise<Category> {
-    if (payload.slug) {
-      const existing = await this.categoryRepository.findBySlug(payload.slug);
+    if (payload.name) {
+      const existing = await this.categoryRepository.findByName(payload.name);
       if (existing && existing.category_id !== categoryId) {
         throw new AppError(
-          `Slug "${payload.slug}" is already taken`,
-          HTTP_STATUS.CONFLICT,
+          "Invalid update data or category name already exists",
+          HTTP_STATUS.BAD_REQUEST,
         );
       }
     }
@@ -89,11 +81,29 @@ export class CategoryService {
   }
 
   async deleteCategory(categoryId: string): Promise<void> {
-    const deleted =
-      await this.categoryRepository.deleteByCategoryId(categoryId);
+    const deleted = await this.categoryRepository.deleteByCategoryId(categoryId);
 
     if (!deleted) {
       throw new AppError("Category not found", HTTP_STATUS.NOT_FOUND);
+    }
+  }
+
+  async getArticlesByCategory(categoryId: string): Promise<unknown[]> {
+    // Verify category exists first
+    await this.getCategoryById(categoryId);
+
+    try {
+      const response = await axios.get(
+        `${env.articleServiceUrl}/api/v1/articles`,
+        { params: { category_id: categoryId } },
+      );
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const body = response.data as any;
+      return Array.isArray(body.data) ? body.data : [];
+    } catch {
+      // If article-service is unreachable, return empty list gracefully
+      return [];
     }
   }
 }
