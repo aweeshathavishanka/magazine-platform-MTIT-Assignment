@@ -94,16 +94,44 @@ export const getMediaById = async (req: Request, res: Response) => {
 
 export const updateMedia = async (req: Request, res: Response) => {
   try {
-    const { file_name } = req.body;
-    
-    if (!file_name) {
-      return sendErrorResponse(res, 400, 'Invalid update data');
+    const { file_name, file_type, title } = req.body; // added title, file_type based on requirements
+
+    // Removed the strict check !file_name so they can update either title, file_name or file_type
+    if (!file_name && !file_type && !title) {
+      return sendErrorResponse(res, 400, 'Invalid update data. Minimum one field (file_name, file_type, title) is required');
     }
-    
-    // Original implementation logic had only validation, so I will keep it identical or add a simple stub to satisfy TS compiler.
-    // Assuming placeholder just returns 200
-    return sendSuccessResponse(res, 200, 'Media updated placeholder');
+
+    const updateData: any = {};
+    if (file_name) updateData.file_name = file_name;
+    if (file_type) updateData.file_type = file_type;
+    if (title) updateData.title = title;
+
+    const updatedMedia = await Media.findOneAndUpdate(
+      { media_id: req.params.id },
+      updateData,
+      { new: true }
+    ).select('-_id -createdAt -updatedAt');
+
+    if (!updatedMedia) {
+      return sendErrorResponse(res, 404, 'Media not found');
+    }
+
+    return sendSuccessResponse(res, 200, 'Media updated successfully', updatedMedia);
   } catch (err) {
-    return sendErrorResponse(res, 500, 'Internal server error');
+    return sendErrorResponse(res, 500, 'Failed to update media');
+  }
+};
+
+export const deleteMedia = async (req: Request, res: Response) => {
+  try {
+    const deletedMedia = await Media.findOneAndDelete({ media_id: req.params.id });
+
+    if (!deletedMedia) {
+      return sendErrorResponse(res, 404, 'Media not found');
+    }
+
+    return sendSuccessResponse(res, 200, 'Media deleted successfully');
+  } catch (err) {
+    return sendErrorResponse(res, 500, 'Failed to delete media');
   }
 };
