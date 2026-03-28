@@ -9,6 +9,7 @@ const options: swaggerJsdoc.Options = {
       version: "1.0.0",
       description: "REST API documentation for the Category microservice",
     },
+
     servers: [
       {
         url:
@@ -56,6 +57,7 @@ const options: swaggerJsdoc.Options = {
             statusCode: { type: "integer" },
             data: { type: "object" },
           },
+          
         },
         ErrorResponse: {
           type: "object",
