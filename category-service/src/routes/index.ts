@@ -10,6 +10,7 @@ router.get("/health", (_req, res) => {
     statusCode: 200,
     data: { uptime: process.uptime() },
   });
+  
 });
 
 router.use(categoryRouter);
