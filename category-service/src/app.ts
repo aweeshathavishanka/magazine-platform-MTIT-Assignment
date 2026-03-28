@@ -20,4 +20,5 @@ app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1", router);
 
 app.use(notFoundHandler);
+
 app.use(globalErrorHandler);
