@@ -1,6 +1,10 @@
+import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import userRoutes from "./routes";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./config/swagger";
+import { connectDB } from "./config/db";
 
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
@@ -13,6 +17,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+<<<<<<< Updated upstream
 const PORT = process.env.PORT || 3001;
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
@@ -40,6 +45,15 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // API routes
+=======
+// Swagger route
+app.use(
+  "/api/v1/users/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec),
+);
+
+>>>>>>> Stashed changes
 app.use("/api/v1/users", userRoutes);
 
 // health check
@@ -47,6 +61,15 @@ app.get("/", (req, res) => {
   res.send("User Service Running");
 });
 
+<<<<<<< Updated upstream
 app.listen(PORT, () => {
   console.log(`User Service running on port ${PORT}`);
+=======
+// Connect DB then start server
+connectDB().then(() => {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`User Service running on port ${port}`);
+  });
+>>>>>>> Stashed changes
 });
