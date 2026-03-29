@@ -15,3 +15,5 @@ dist/
 
 # TypeScript cache
 *.tsbuildinfo
+
+# IDE files
